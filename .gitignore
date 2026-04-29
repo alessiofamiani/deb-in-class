@@ -1,3 +1,6 @@
 .DS_Store
+<<<<<<< HEAD
 *.pyc
 src/spikes/BiasOnDemand/
+=======
+>>>>>>> cfdf1b6 (Clean repo)

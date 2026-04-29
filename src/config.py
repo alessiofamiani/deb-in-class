@@ -5,35 +5,13 @@ datasets_md_dict_path = "../rsc/datasets_md_dict.json"
 md_path = "../doc/datasets.md"
 checkpoint_path = "../out/checkpoints_{}.df"
 results_path = "../out/results_{}.df"
-probing_sets_path = "../out/data"
-preprocessors_path = "../rsc/preprocessors/{}.preprocessor"
-
-# Synth data gen
-probing_sets_dict = {
-    "no_bias": {},
-    "historically_biased_y": {"l_y":10},
-    "historically_biased_r": {"l_h_r":10},
-    "historically_biased_q": {"l_q":10, "l_h_q":10},
-    "measurement_biased_y": {"l_m_y":10, "l_m":10},
-    #"representational_biased": {"p_u": 0.5}
-}
-"""
-probing_sets_dict = {
- "no_bias": {"l_y":4, "l_m_y":0, "thr_supp":1, "l_h_r":1.5,  "l_h_q":1, "l_m":0, "p_u":1, "l_r":False, "l_o":False, "l_y_b":0, "l_q":2, "sy":5, "l_r_q":0, "l_m_y_non_linear":False},
- "historically_biased_y": {"l_y":4, "l_m_y":0, "thr_supp":1, "l_h_r":10,  "l_h_q":1, "l_m":0, "p_u":1, "l_r":False, "l_o":False, "l_y_b":0, "l_q":2, "sy":5, "l_r_q":0, "l_m_y_non_linear":False},
- "measurement_biased_y": {"l_y":4, "l_m_y":10, "thr_supp":1, "l_h_r":10,  "l_h_q":1, "l_m":0, "p_u":1, "l_r":False, "l_o":False, "l_y_b":0, "l_q":2, "sy":5, "l_r_q":0, "l_m_y_non_linear":False},
-}"""
-
-debiasing_seeds = [45, 111, 234, 897, 10]#, 96, 188, 911, 6, 3204]
 
 # Vanilla Results DataFrame
 res_cols = [
     "total_time", # for one whole run of exp
     # Data Info
     "dataset",
-    "n_samples",
     "sensitive",
-    "probing_set",
     "test_size",
     # Unmitigated Model
     "unm_model_type",
@@ -57,14 +35,7 @@ res_cols = [
     "discr_model_exp_time",
     "y_u",
     "y_probing",
-    "y_prime",
-    "new_dataset_stats",
-    # Discriminator var model
-    "discriminator_var_accuracy",
-    "discriminator_var_fairness",
-    "discriminator_var_params",
-    "y_var",
-    "mitigated_models_var"
+    "y_prime"
     # Models -> disk,
     # XAI structures, explainers and plots -> disk
     # or a dictionary containing all "pickables" files
@@ -150,8 +121,7 @@ model_grids = {
         "run_linprog_step": [True, False]
     },
     "prl": {
-    #"n_prototypes": [5, 15, 30], # OLD
-    "n_prototypes": [2, 3, 4], #for synth?
+    "n_prototypes": [5, 15, 30],
     #"fairness_weight": [0.25, 0.5, 75.0],
     #"target_weight": [0.75, 0.5, 0.25],
     "reconstruct_weight": [1.0]

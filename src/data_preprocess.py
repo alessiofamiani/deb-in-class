@@ -81,7 +81,7 @@ def main():
     print(">>> Data loading...")
     if os.path.exists(config.datasets_path + "/{}.dataset".format(d)):
         with open(config.datasets_path + "/{}.dataset".format(d), "rb") as f:
-            X, Y = pickle.load(f)
+            dataset = pickle.load(f)
         print("\tDataset loaded from disk.")
     else:
         # Download from UCI repo
@@ -91,9 +91,10 @@ def main():
         else: raise ValueError("Dataset not supported.")
 
         # save dataset, it doesn't work on python 3.9 (but in 3.14)
-        # with open(config.datasets_path + "/{}.dataset".format(d), "wb") as f:
+        #with open(config.datasets_path + "/{}.dataset".format(d), "wb") as f:
         #    pickle.dump(dataset, f)
-        # print("\tDataset cached to disk.")
+        #print("\tDataset cached to disk.")
+
 
         # save md
         datasets_md_dict = {}
@@ -106,8 +107,8 @@ def main():
         else: update_dataset_md(d, datasets_md_dict, config.datasets_md_dict_path, dataset, data_info)
         save_dataset_md(config.md_path, datasets_md_dict)
 
-        X = dataset.data.features.copy()
-        Y = dataset.data.targets.copy()
+    X = dataset.data.features.copy()
+    Y = dataset.data.targets.copy()
 
     # ┌───────────────────────────────┐
     # │       ️ PRE-PROCESSING        │
@@ -131,19 +132,11 @@ def main():
             data_info['preprocessing']['cols_encoding'].keys()].astype("boolean")
         X.loc[:, 'contact'] = X['contact'].fillna(X['contact'].mode()[0])
 
-    if "bias" in d:
-        X['Q'] = X['Q'].astype("object")
-        sensitives_maps['A'] = {1: 1, 0: 0} # forcing cause otherwise is not working
-
     from utils.data import preprocessing, label_encoding, sensitive_encoding
     print("\t> ----- Pre-processing")
-    X_prep = preprocessing(X, sensitives, data_info, d)
-    if d == "adult" or d == "bank_marketing" or d == "credit_card":
-        Y_prep = label_encoding(Y[dataset.metadata.target_col[0]], map=target_encoding, verbose=True)
-    else:
-        #Y = Y.to_frame()
-        Y_prep = label_encoding(Y, map=target_encoding, verbose=True) # synth
-    sensitive_encoding(X_prep, sensitives, sensitives_maps, verbose=True) # FIXME: synth
+    X_prep = preprocessing(X, sensitives, data_info)
+    Y_prep = label_encoding(Y[dataset.metadata.target_col[0]], map=target_encoding, verbose=True)
+    sensitive_encoding(X_prep, sensitives, sensitives_maps, verbose=True)
 
     with open(config.datasets_path + "/{}.preprocessed".format(d), "wb") as f:
         pickle.dump((X_prep, Y_prep), f)

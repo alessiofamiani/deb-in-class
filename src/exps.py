@@ -307,7 +307,7 @@ def train_best_model(params, X_train, y_train, model_path, verbose=False, sensit
             pickle.dump(search, f)
     return model, best_params
 
-def preprocess_debiasing(model_type, param_grid,  X_train, y_train, X_test, s, verbose=False, pickle_path=None, seed=42):
+def preprocess_debiasing(model_type, param_grid,  X_train, y_train, X_test, verbose=False, pickle_path=None):
     from itertools import product
     combinations = []
     if model_type==PrototypeRepresentationLearner:
@@ -319,10 +319,9 @@ def preprocess_debiasing(model_type, param_grid,  X_train, y_train, X_test, s, v
     data_versions = []
     models_versions = []
     for params in combinations:
-        params['random_state'] = seed
         if verbose: print(params)
         model = model_type(**params)
-        model.fit(X_train, y_train, sensitive_features=X_train[s])
+        model.fit(X_train, y_train)
         X_train_transformed = model.transform(X_train)
         X_test_transformed = model.transform(X_test)
 
@@ -340,7 +339,7 @@ def preprocess_debiasing(model_type, param_grid,  X_train, y_train, X_test, s, v
     return data_versions, models_versions
 
 def main():
-    parser = argparse.ArgumentParser(description="Experiments.")
+    parser = argparse.ArgumentParser(description="Dataset preprocessing.")
     parser.add_argument("d", type=str, help="Name of one of the available datasets in the repo")
     parser.add_argument("-ms", "--max_size", type=int, help="Limit row numbers for the specified dataset", default=None)
     args = parser.parse_args()
@@ -538,7 +537,7 @@ def main():
                                     "X_train": pd.DataFrame(X_train_transformed),
                                     "y_train": y_train,
                                     "sensitive_col": s,
-                                    "model_path": "../out/models/mitigated_{}_{}_{}_{}_v{}".format(debiasing, flv, s, d, i),
+                                    "model_path": "../out/models/{}_{}_{}_{}_v{}".format(debiasing, flv, s, d, i),
                                     "custom_sensitives": X_train[s],
                                 }
                                 mit, mit_params, search = train_best_fair_model_parallel(**search_params)
@@ -550,7 +549,7 @@ def main():
                             mitigated = best_search.best_estimator_
                             mitigated_params = best_search.best_params_
 
-                            with open("../out/models/mitigated_{}_{}_{}_{}_best_model({})".format(debiasing, flv, s, d, best_index),
+                            with open("../out/models/{}_{}_{}_{}_best_model({})".format(debiasing, flv, s, d, best_index),
                                       "wb") as f:
                                 pickle.dump(mitigated, f)
                             print("Best model cached to disk.")
@@ -626,7 +625,7 @@ def main():
                     X_prob_train, y_prime_train = ros.fit_resample(X_prob_train, y_prime_train)
 
                     X_prob_train = X_prob_train.reset_index(drop=True)
-                    X_prob_test = X_prob_test.reset_index(drop=True) # FIXME:
+                    X_prob_test = X_prob_test.reset_index(drop=True)
 
                     for discr_model in discr_model_pool:
                         if checkpoint_exists:
