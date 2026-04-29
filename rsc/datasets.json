@@ -1,0 +1,204 @@
+{
+  "adult": {
+    "settings": {
+      "format": "csv",
+      "train_path": "adult.data",
+      "test_path": "adult.test",
+      "train_load_params": {
+            "header": null
+        },
+      "test_load_params": {
+            "header": null,
+            "skiprows": 1
+        }
+    },
+    "preprocessing": {
+      "custom_mv": "?",
+      "target_col": "income",
+      "target_encoding": {"<=50K": 0, ">50K": 1},
+      "target_index": -1,
+      "feature_names": ["age",
+                         "workclass",
+                         "fnlwgt",
+                         "education",
+                         "num",
+                         "status",
+                         "occupation",
+                         "relationship",
+                         "race",
+                         "sex",
+                         "gain",
+                         "loss",
+                         "week",
+                         "country",
+                          "income"],
+      "pipeline": {
+        "bool_pip" : {
+          "imputer": {
+            "params": {
+              "strategy": "mean"
+            }
+          }
+        },
+        "num_pip" : {
+          "imputer": {"params": {"strategy": "mean"}},
+          "scaler": {"type":  "min_max", "params": {}}
+        },
+        "cat_pip": {
+          "imputer": {"params": {"strategy": "most_frequent"}},
+          "onehot": {"params":{"handle_unknown":"ignore", "sparse_output": false, "dtype":"np.int64"}}
+        },
+        "sens_pip": {}
+      }
+    },
+    "fairness": {
+      "sensitives": {
+        "sex" : {
+          "Male": 0, "Female":1
+        },
+        "race" : {"White": 0, "Black": 1, "Hispanic": 1, "Asian-Pac-Islander": 1,
+            "Amer-Indian-Eskimo": 1, "Other":1}
+        },
+      "fav_labels_mapping": {
+        "1": 1,
+        "0" : 0
+      }
+    }
+  },
+  "bank_marketing": {
+    "preprocessing": {
+      "cols_encoding": {
+        "contact": {
+          "cellular": 0, "telephone": 1
+        },
+        "default": {
+          "yes":1, "no":0
+        },
+        "housing": {
+          "yes":1, "no":0
+        },
+        "loan": {
+          "yes":1, "no":0
+        }
+      },
+      "target_encoding": {"yes": 1, "no": 0},
+      "pipeline": {
+        "bool_pip" : {
+          "imputer": {
+            "params": {
+              "strategy": "mean"
+            }
+          }
+        },
+        "num_pip" : {
+          "imputer": {"params": {"strategy": "mean"}},
+          "scaler": {"type":  "min_max", "params": {}}
+        },
+        "cat_pip": {
+          "imputer": {"params": {"strategy": "most_frequent"}},
+          "onehot": {"params":{"handle_unknown":"ignore", "sparse_output": false, "dtype":"np.int64"}}
+        },
+        "sens_pip": {}
+      },
+      "custom_mv": null
+    },
+    "fairness": {
+      "sensitives": {
+        "marital": {
+          "single": 1, "married": 0, "divorced": 1
+        }
+      },
+      "fav_labels_mapping": {
+        "1": 1,
+        "0": 0
+      }
+    }
+  },
+  "credit_card": {
+    "preprocessing": {
+      "rename_map": {
+        "X1": "limit_bal",
+        "X2": "sex",
+        "X3": "education",
+        "X4": "marital",
+        "X5": "age",
+
+        "X6": "pay_0",
+        "X7": "pay_2",
+        "X8": "pay_3",
+        "X9": "pay_4",
+        "X10": "pay_5",
+        "X11": "pay_6",
+
+        "X12": "bill_amt1",
+        "X13": "bill_amt2",
+        "X14": "bill_amt3",
+        "X15": "bill_amt4",
+        "X16": "bill_amt5",
+        "X17": "bill_amt6",
+
+        "X18": "pay_amt1",
+        "X19": "pay_amt2",
+        "X20": "pay_amt3",
+        "X21": "pay_amt4",
+        "X22": "pay_amt5",
+        "X23": "pay_amt6"
+      },
+      "cols_encoding": {
+        "education": {
+          "1": "Grad.School",
+          "2": "University",
+          "3": "High School",
+          "4": "Others",
+          "0": "Others",
+          "5": "Others",
+          "6": "Others"
+        },
+        "sex": {
+          "1": "Male",
+          "2": "Female"
+        },
+        "marital": {
+          "1": "Married",
+          "2": "Single",
+          "3": "Other",
+          "0": "Other"
+        }
+      },
+      "custom_mv": null,
+      "pipeline": {
+        "bool_pip" : {
+          "imputer": {
+            "params": {
+              "strategy": "mean"
+            }
+          }
+        },
+        "num_pip" : {
+          "imputer": {"params": {"strategy": "mean"}},
+          "scaler": {"type":  "min_max", "params": {}}
+        },
+        "cat_pip": {
+          "imputer": {"params": {"strategy": "most_frequent"}},
+          "onehot": {"params":{"handle_unknown":"ignore", "sparse_output": false, "dtype":"np.int64"}}
+        }
+      },
+      "target_encoding": {"0": 0, "1": 1}
+    },
+    "fairness": {
+      "sensitives": {
+        "sex" : {
+          "Male": 0, "Female":1
+        },
+        "marital": {
+          "Single": 1, "Married": 0, "Other": 1
+        }
+      },
+      "fav_labels_mapping": {
+        "1": 0,
+        "0": 1
+      }
+
+    }
+  }
+}
