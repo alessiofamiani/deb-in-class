@@ -1,13 +1,71 @@
 import numpy as np
 import pandas as pd
+import pickle
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, StandardScaler, LabelEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import make_pipeline, Pipeline
 from sklearn import set_config
+from src.config import datasets_path
 set_config(transform_output='pandas')
 
-# TODO: synth data generation
+def generate_synth_dataset(dim, params, dataset_name="synth_dataset", seed=42):
+    from src.spikes.BiasOnDemand.generate_dataset import create_synth
+    from pathlib import Path
+    import pickle
+
+    # so we can pass just the params we set
+    args = {
+        "dim": dim,  # Valore predefinito
+        "l_y": 0,
+        "l_m_y": 0,
+        "thr_supp": 1,
+        "l_h_r": 0,
+        "l_h_q": 0,
+        "l_m": 1, # change this for measurement bias and if set to 0 it generates R
+        "p_u": 0,
+        "l_r": False,
+        "l_o": False,
+        "l_y_b": 0,
+        "l_q": 0,
+        "sy": 0,
+        "l_r_q": 0,
+        "l_m_y_non_linear": False,
+        "seed": seed
+    }
+
+    for key in params.keys():
+        if key in args:
+            args[key] = params[key]
+
+    X_train, X_ind_train, X_supp_train, X_test, X_ind_test, X_supp_test, y_train, y_test, y_train_real, y_test_real = create_synth(**args)
+
+    # # save the generated dataset
+
+    path = f'{datasets_path}/{dataset_name}'
+    # create directory if it does not exist yet
+    Path(path).mkdir(parents=True, exist_ok=True)
+
+    X_train.to_csv(Path(path).joinpath('X_train.csv'))
+    X_ind_train.to_csv(Path(path).joinpath('X_ind_train.csv'))
+    X_supp_train.to_csv(Path(path).joinpath('X_supp_train.csv'))
+    X_test.to_csv(Path(path).joinpath('X_test.csv'))
+    X_ind_test.to_csv(Path(path).joinpath('X_ind_test.csv'))
+    X_supp_test.to_csv(Path(path).joinpath('X_supp_test.csv'))
+    y_train.to_csv(Path(path).joinpath('y_train.csv'))
+    y_test.to_csv(Path(path).joinpath('y_test.csv'))
+    y_train_real.to_csv(Path(path).joinpath('y_train_real.csv'))
+    y_test_real.to_csv(Path(path).joinpath('y_test_real.csv'))
+
+    # concatenate X, Y, Y_real
+    X = pd.concat([X_train, X_test], axis=0)
+    Y = pd.concat([y_train, y_test], axis=0)
+    Y_real = pd.concat([y_train_real, y_test_real], axis=0)
+
+    # save dataset in standard format
+    pickle.dump((X, Y), open(f'{datasets_path}/{dataset_name}.dataset', "wb"))
+
+    return X, Y, Y_real
 
 # LOAD DATASET
 def load_data(dataset, datasets_info, path):
@@ -97,7 +155,7 @@ def sensitive_encoding(X, sensitives, maps, verbose=False):
     for s in sensitives: X[s] = label_encoding(X[s], maps[s], verbose=verbose)
     return X
 
-def preprocessing(data, sensitives, dataset_info):
+def preprocessing(data, sensitives, dataset_info, dataset_name):
     """
     Preprocesses data.
     :param data: data to be preprocessed.
@@ -139,5 +197,7 @@ def preprocessing(data, sensitives, dataset_info):
         related_cols = [f for f in feature_names if f.startswith(col + '_') or f == col]
         final_columns.extend(related_cols)
     prep_data = prep_data[final_columns]
+
+    pickle.dump(preprocessor, open(f'../rsc/preprocessors/{dataset_name}.preprocessor', "wb"))
 
     return prep_data

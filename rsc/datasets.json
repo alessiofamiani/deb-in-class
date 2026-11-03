@@ -61,7 +61,7 @@
         },
       "fav_labels_mapping": {
         "1": 1,
-        "0" : 0
+        "0": 0
       }
     }
   },
@@ -199,6 +199,216 @@
         "0": 1
       }
 
+    }
+  },
+  "no_bias": {
+    "preprocessing": {
+      "target_encoding": {"1": 1, "0": 0},
+      "pipeline": {
+        "bool_pip" : {
+          "imputer": {
+            "params": {
+              "strategy": "mean"
+            }
+          }
+        },
+        "num_pip" : {
+          "imputer": {"params": {"strategy": "mean"}},
+          "scaler": {"type":  "min_max", "params": {}}
+        },
+        "cat_pip": {
+          "imputer": {"params": {"strategy": "most_frequent"}},
+          "onehot": {"params":{"handle_unknown":"ignore", "sparse_output": false, "dtype":"np.int64"}}
+        },
+        "sens_pip": {}
+      },
+      "custom_mv": null
+    },
+    "fairness": {
+      "sensitives": {
+        "A": {
+          "1": 1, "0": 0
+        }
+      },
+      "fav_labels_mapping": {
+        "1": 1,
+        "0": 0
+      }
+    }
+  },
+  "historically_biased_y": {
+    "preprocessing": {
+      "target_encoding": {"1": 1, "0": 0},
+      "pipeline": {
+        "bool_pip" : {
+          "imputer": {
+            "params": {
+              "strategy": "mean"
+            }
+          }
+        },
+        "num_pip" : {
+          "imputer": {"params": {"strategy": "mean"}},
+          "scaler": {"type":  "min_max", "params": {}}
+        },
+        "cat_pip": {
+          "imputer": {"params": {"strategy": "most_frequent"}},
+          "onehot": {"params":{"handle_unknown":"ignore", "sparse_output": false, "dtype":"np.int64"}}
+        },
+        "sens_pip": {}
+      },
+      "custom_mv": null
+    },
+    "fairness": {
+      "sensitives": {
+        "A": {
+          "1": 1, "0": 0
+        }
+      },
+      "fav_labels_mapping": {
+        "1": 1,
+        "0": 0
+      }
+    }
+  },
+  "historically_biased_r": {
+    "preprocessing": {
+      "target_encoding": {"1": 1, "0": 0},
+      "pipeline": {
+        "bool_pip" : {
+          "imputer": {
+            "params": {
+              "strategy": "mean"
+            }
+          }
+        },
+        "num_pip" : {
+          "imputer": {"params": {"strategy": "mean"}},
+          "scaler": {"type":  "min_max", "params": {}}
+        },
+        "cat_pip": {
+          "imputer": {"params": {"strategy": "most_frequent"}},
+          "onehot": {"params":{"handle_unknown":"ignore", "sparse_output": false, "dtype":"np.int64"}}
+        },
+        "sens_pip": {}
+      },
+      "custom_mv": null
+    },
+    "fairness": {
+      "sensitives": {
+        "A": {
+          "1": 1, "0": 0
+        }
+      },
+      "fav_labels_mapping": {
+        "1": 1,
+        "0": 0
+      }
+    }
+  },
+  "historically_biased_q": {
+    "preprocessing": {
+      "target_encoding": {"1": 1, "0": 0},
+      "pipeline": {
+        "bool_pip" : {
+          "imputer": {
+            "params": {
+              "strategy": "mean"
+            }
+          }
+        },
+        "num_pip" : {
+          "imputer": {"params": {"strategy": "mean"}},
+          "scaler": {"type":  "min_max", "params": {}}
+        },
+        "cat_pip": {
+          "imputer": {"params": {"strategy": "most_frequent"}},
+          "onehot": {"params":{"handle_unknown":"ignore", "sparse_output": false, "dtype":"np.int64"}}
+        },
+        "sens_pip": {}
+      },
+      "custom_mv": null
+    },
+    "fairness": {
+      "sensitives": {
+        "A": {
+          "1": 1, "0": 0
+        }
+      },
+      "fav_labels_mapping": {
+        "1": 1,
+        "0": 0
+      }
+    }
+  },
+  "measurement_biased_y": {
+    "preprocessing": {
+      "target_encoding": {"1": 1, "0": 0},
+      "pipeline": {
+        "bool_pip" : {
+          "imputer": {
+            "params": {
+              "strategy": "mean"
+            }
+          }
+        },
+        "num_pip" : {
+          "imputer": {"params": {"strategy": "mean"}},
+          "scaler": {"type":  "min_max", "params": {}}
+        },
+        "cat_pip": {
+          "imputer": {"params": {"strategy": "most_frequent"}},
+          "onehot": {"params":{"handle_unknown":"ignore", "sparse_output": false, "dtype":"np.int64"}}
+        },
+        "sens_pip": {}
+      },
+      "custom_mv": null
+    },
+    "fairness": {
+      "sensitives": {
+        "A": {
+          "1": 1, "0": 0
+        }
+      },
+      "fav_labels_mapping": {
+        "1": 1,
+        "0": 0
+      }
+    }
+  },
+  "representational_biased": {
+    "preprocessing": {
+      "target_encoding": {"1": 1, "0": 0},
+      "pipeline": {
+        "bool_pip" : {
+          "imputer": {
+            "params": {
+              "strategy": "mean"
+            }
+          }
+        },
+        "num_pip" : {
+          "imputer": {"params": {"strategy": "mean"}},
+          "scaler": {"type":  "min_max", "params": {}}
+        },
+        "cat_pip": {
+          "imputer": {"params": {"strategy": "most_frequent"}},
+          "onehot": {"params":{"handle_unknown":"ignore", "sparse_output": false, "dtype":"np.int64"}}
+        },
+        "sens_pip": {}
+      },
+      "custom_mv": null
+    },
+    "fairness": {
+      "sensitives": {
+        "A": {
+          "1": 1, "0": 0
+        }
+      },
+      "fav_labels_mapping": {
+        "1": 1,
+        "0": 0
+      }
     }
   }
 }
